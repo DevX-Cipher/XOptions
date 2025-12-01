@@ -35,8 +35,11 @@
 #include <QRegularExpressionMatch>
 #endif
 // #include <QVector>
-#ifdef QT_GUI_LIB
+
+#ifdef QT_WIDGETS_LIB
 #include "../gui_source/desktopintegrationhelper.h"
+#endif
+#ifdef QT_GUI_LIB
 #include <QApplication>
 #include <QSystemTrayIcon>
 #include <QCheckBox>
@@ -554,7 +557,7 @@ private:
     bool m_bIsNeedRestart;
     qint32 m_nMaxRecentFilesCount;
 #ifdef Q_OS_WIN
-#ifdef QT_GUI_LIB
+#ifdef QT_WIDGETS_LIB
     QSystemTrayIcon *m_trayIcon = nullptr;
     QMenu *m_trayMenu = nullptr;
     QPointer<QWidget> m_guiMainWindow;
