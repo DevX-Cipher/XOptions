@@ -2540,7 +2540,7 @@ void XOptions::removeFromUserPathVariable(const QString &targetPath)
     }
 }
 #endif
-#if defined(Q_OS_WIN) && defined(QT_GUI_LIB)
+#if defined(Q_OS_WIN) && defined(QT_WIDGETS_LIB)
 bool XOptions::isTrayMonitoringActive() const
 {
     return m_trayMonitoringActive;
@@ -3240,3 +3240,4 @@ XOptions::BUNDLE XOptions::getBundle()
 
     return result;
 }
+
