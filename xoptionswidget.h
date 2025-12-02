@@ -23,6 +23,11 @@
 
 #include "xshortcutswidget.h"
 
+#ifdef QT_WIDGETS_LIB
+class GuiMainWindow;
+extern GuiMainWindow* g_pMainWindow;
+#endif
+
 namespace Ui {
 class XOptionsWidget;
 }
