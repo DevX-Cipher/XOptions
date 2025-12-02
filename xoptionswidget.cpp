@@ -19,7 +19,6 @@
  * SOFTWARE.
  */
 #include "xoptionswidget.h"
-#include "guimainwindow.h"
 #include "ui_xoptionswidget.h"
 
 XOptionsWidget::XOptionsWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XOptionsWidget)
@@ -360,9 +359,10 @@ void XOptionsWidget::reload()
 
             if (bTrayStored && !bTrayRunning) {
                 qDebug() << "[Reload] Tray was enabled in config but not running — setting up without toast.";
-                m_pOptions->setupTrayIconAndDownloadMonitoring(g_pMainWindow, false);
+                if (g_pMainWindow) {
+                    m_pOptions->setupTrayIconAndDownloadMonitoring((QWidget*)g_pMainWindow, false);
+                }
             }
-
             if (bTrayStored) {
                 qDebug() << "[Reload] Rebinding tray callbacks to ensure restore works.";
                 m_pOptions->registerTrayCallbacks(false);
@@ -422,8 +422,12 @@ void XOptionsWidget::on_checkBoxEnableTrayMonitoring_toggled(bool bChecked)
 
     if (bChecked) {
         if (!m_pOptions->isTrayMonitoringActive()) {
-            m_pOptions->setupTrayIconAndDownloadMonitoring(g_pMainWindow, true);
-            qDebug() << "[Tray Monitor] Setup triggered.";
+            if (g_pMainWindow) {
+                m_pOptions->setupTrayIconAndDownloadMonitoring((QWidget*)g_pMainWindow, true);
+                qDebug() << "[Tray Monitor] Setup triggered.";
+            } else {
+                qDebug() << "[Tray Monitor] Warning: g_pMainWindow is null";
+            }
         } else {
             qDebug() << "[Tray Monitor] Already active.";
             m_pOptions->registerTrayCallbacks(true);
