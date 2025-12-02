@@ -19,6 +19,7 @@
  * SOFTWARE.
  */
 #include "xoptionswidget.h"
+#include "guimainwindow.h"
 #include "ui_xoptionswidget.h"
 
 XOptionsWidget::XOptionsWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XOptionsWidget)
@@ -359,8 +360,11 @@ void XOptionsWidget::reload()
 
             if (bTrayStored && !bTrayRunning) {
                 qDebug() << "[Reload] Tray was enabled in config but not running — setting up without toast.";
-                if (g_pMainWindow) {
-                    m_pOptions->setupTrayIconAndDownloadMonitoring((QWidget*)g_pMainWindow, false);
+                GuiMainWindow* mainWindow = GuiMainWindow::instance();
+                if (mainWindow != nullptr) {
+                    m_pOptions->setupTrayIconAndDownloadMonitoring((QWidget*)mainWindow, false);
+                } else {
+                    qDebug() << "[Reload] Warning: GuiMainWindow instance not available yet";
                 }
             }
             if (bTrayStored) {
@@ -422,11 +426,11 @@ void XOptionsWidget::on_checkBoxEnableTrayMonitoring_toggled(bool bChecked)
 
     if (bChecked) {
         if (!m_pOptions->isTrayMonitoringActive()) {
-            if (g_pMainWindow) {
-                m_pOptions->setupTrayIconAndDownloadMonitoring((QWidget*)g_pMainWindow, true);
+            if (GuiMainWindow::instance() != nullptr) {
+                m_pOptions->setupTrayIconAndDownloadMonitoring((QWidget*)GuiMainWindow::instance(), true);
                 qDebug() << "[Tray Monitor] Setup triggered.";
             } else {
-                qDebug() << "[Tray Monitor] Warning: g_pMainWindow is null";
+                qDebug() << "[Tray Monitor] Warning: GuiMainWindow instance is null";
             }
         } else {
             qDebug() << "[Tray Monitor] Already active.";
